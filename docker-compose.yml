@@ -19,10 +19,22 @@ services:
       - "80:80"
     volumes:
       - ./site1:/var/www/html
-      - ./.docker/nginx:/etc/nginx/conf.d
+      - ./.docker/nginx_1:/etc/nginx/conf.d
     depends_on:
       - php_1
       - node_1
+
+  nginx_2:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "81:80"
+    volumes:
+      - ./site2:/var/www/html
+      - ./.docker/nginx_2:/etc/nginx/conf.d
+    depends_on:
+      - php_2
+      - node_2
 
   composer_1:
     image: composer:2.4.3
@@ -43,6 +55,25 @@ services:
         npm install
         npm run build
 
+  composer_2:
+    image: composer:2.4.3
+    volumes:
+      - ./site2:/app
+    command:
+      - install
+
+  node_2:
+    image: node:14.18.1
+    volumes:
+      - ./site2:/app
+    working_dir: /app
+    command:
+      - /bin/bash
+      - -c
+      - |
+        npm install
+        npm run build
+
   php_1:
     restart: always
     build: ./.docker/php
@@ -50,6 +81,15 @@ services:
       - ./site1:/var/www/html
     depends_on:
       - composer_1
+      - db
+
+  php_2:
+    restart: always
+    build: ./.docker/php
+    volumes:
+      - ./site2:/var/www/html
+    depends_on:
+      - composer_2
       - db
 
 volumes:
