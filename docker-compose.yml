@@ -53,8 +53,7 @@ services:
       - -c
       - |
         npm install
-        npm run dev
-    # npm run build fait des dingueries avec le css donc on fait un npm run dev
+        npm run build
 
   composer_2:
     image: composer:2.4.3
@@ -93,5 +92,21 @@ services:
       - composer_2
       - db
 
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+
+  portainer:
+    image: 'portainer/portainer-ce:latest'
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - "9443:9443"
+
 volumes:
     db_data:
+    portainer_data:
