@@ -19,7 +19,7 @@ services:
       - "80:80"
     volumes:
       - ./site1:/var/www/html
-      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./.docker/nginx:/etc/nginx/conf.d
     depends_on:
       - php_1
       - node_1
