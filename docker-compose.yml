@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'app'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+
+  nginx_1:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  php_1:
+    restart: always
+    build: ./.docker/php
+    volumes:
+      - ./site1:/var/www/html
+    ports:
+      - "8080:9000"
+    depends_on:
+      - db
+
+  composer_1:
+    image: composer:latest
+    volumes:
+      - ./site1:/var/www/html
+    command:
+      - install
+    depends_on:
+      - php_1
+volumes:
+    db_data:
