@@ -18,15 +18,11 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-
-  php_1:
-    restart: always
-    build: ./.docker/php
-    volumes:
       - ./site1:/var/www/html
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
     depends_on:
-      - db
+      - php_1
+      - node_1
 
   composer_1:
     image: composer:2.4.3
@@ -34,7 +30,22 @@ services:
       - ./site1:/app
     command:
       - install
+
+  node_1:
+    image: node:14.18.1
+    volumes:
+      - ./site1:/app
+    command:
+      - build
+
+  php_1:
+    restart: always
+    build: ./.docker/php
+    volumes:
+      - ./site1:/var/www/html
     depends_on:
-      - php_1
+      - composer_1
+      - db
+
 volumes:
     db_data:

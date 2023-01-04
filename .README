@@ -1,0 +1,7 @@
+clone project
+docker-compose up
+
+
+docker-compose exec php_1 php artisan key:generate
+
+php artisan migrate:fresh --seed
