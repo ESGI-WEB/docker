@@ -15,23 +15,23 @@ services:
   nginx_1:
     image: nginx:latest
     restart: always
+    ports:
+      - "80:80"
     volumes:
-      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
 
   php_1:
     restart: always
     build: ./.docker/php
     volumes:
       - ./site1:/var/www/html
-    ports:
-      - "8080:9000"
     depends_on:
       - db
 
   composer_1:
-    image: composer:latest
+    image: composer:2.4.3
     volumes:
-      - ./site1:/var/www/html
+      - ./site1:/app
     command:
       - install
     depends_on:
