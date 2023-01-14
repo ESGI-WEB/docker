@@ -4,7 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
+#.env # to have .env in the repo (shool project)
 .env.backup
 .phpunit.result.cache
 Homestead.json
